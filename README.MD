@@ -47,7 +47,8 @@ Endpoints Principais.
 -  GET /categories: Lista todas as categorias.
 -  POST /categories: Cria uma nova categoria.
 
-
+![print 1](https://github.com/user-attachments/assets/ab077ff6-c5c7-4705-a97d-88a6dfd7d984)
+![print 2](https://github.com/user-attachments/assets/e895a55b-c490-4dff-bae6-82403bdb0bc5)
 
 
 
