@@ -17,7 +17,7 @@ export async function updatedCreditCard(app: FastifyInstance) {
      name: z.string().optional(),
      limit: z.coerce.number().min(0).optional(),
      closingDate: z.number().int().optional(),
-     dueDate: z.date().optional(),
+     dueDate: z.number().int().optional(),
     }),
     params: z.object({
      id: z.string(),
@@ -28,7 +28,7 @@ export async function updatedCreditCard(app: FastifyInstance) {
       id: z.string().uuid(),
       limit: z.number(),
       closingDate: z.number().int(),
-      dueDate: z.date(),
+      dueDate: z.number().int(),
       available: z.number(),
       createdAt: z.date(),
       updatedAt: z.date().nullable(),

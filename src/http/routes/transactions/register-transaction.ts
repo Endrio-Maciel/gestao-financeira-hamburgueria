@@ -37,6 +37,7 @@ export async function registerTransaction(app: FastifyInstance) {
        updatedAt: z.string(),
        categoryId: z.string().nullable(),
        accountId: z.string().nullable(),
+       creditCardId: z.string().nullable(),
      }),
    },
    },
@@ -69,7 +70,8 @@ export async function registerTransaction(app: FastifyInstance) {
     userId,
     accountId,
     creditCardId: creditCardId || null,
-   }
+   },
+   include: {creditCard: true}
   })
 
   return reply.status(201).send({
@@ -89,7 +91,7 @@ export async function registerTransaction(app: FastifyInstance) {
    updatedAt: transaction.updatedAt.toISOString(),
    categoryId: transaction.categoryId,
    accountId: transaction.accountId,
-   creditCardId: transaction.creditCardId,
+   creditCardId: transaction.creditCard?.id || null,
  });
  })
 }
