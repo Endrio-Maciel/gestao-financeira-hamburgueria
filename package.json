@@ -5,7 +5,10 @@
   "scripts": {
     "dev": "tsx watch src/http/server.ts",
     "start": "tsc",
-    "build": "node build/server.js"
+    "build": "node build/server.js",
+    "migrate": "prisma migrate deploy",
+    "seed": "npx prisma db seed",
+    "postdeploy": "npm run migrate && npm run seed"
   },
   "keywords": [],
   "author": "",
@@ -43,6 +46,6 @@
     "typescript": "^5.7.2"
   },
   "prisma": {
-    "seed": "ts-node prisma/seed.ts"
+    "seed": "ts-node prisma/seed.js"
   }
 }
