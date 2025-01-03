@@ -1,0 +1,160 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id           String @id @default(uuid())
+  name         String
+  email        String @unique
+  passwordHash String @map("password_hash")
+  roleId       String @default("MEMBER")
+  role         Role   @relation(fields: [roleId], references: [id])
+
+  createdAt    DateTime       @default(now()) @map("created_at")
+  updatedAt    DateTime?      @map("updated_at")
+  transactions Transactions[]
+  tokens       Token[]
+
+  @@map("users")
+}
+
+enum TransactionType {
+  INCOME
+  EXPENSE
+}
+
+model Transactions {
+  id          String          @id @default(uuid())
+  type        TransactionType
+  title       String
+  description String?
+  amount      Float
+  createdAt   DateTime        @default(now()) @map("created_at")
+  updatedAt   DateTime        @updatedAt @map("updated_at")
+  dueDate     DateTime?       @map("due_date")
+  paymentDate DateTime?       @map("payment_date")
+  isFinalized Boolean         @default(false)
+
+  userId     String
+  user       User      @relation(fields: [userId], references: [id])
+  categoryId String?
+  category   Category? @relation(fields: [categoryId], references: [id])
+
+  accountId String
+  account   Account @relation(fields: [accountId], references: [id])
+
+  creditCardId        String?
+  creditCard          CreditCard?        @relation(fields: [creditCardId], references: [id])
+  CreditCardInvoice   CreditCardInvoice? @relation(fields: [creditCardInvoiceId], references: [id])
+  creditCardInvoiceId String?
+
+  @@map("transactions")
+}
+
+model CreditCard {
+  id          String  @id @default(uuid())
+  name        String  @unique
+  limit       Float   @default(0)
+  available   Float   @default(0)
+  closingDate Int
+  dueDate     Int
+  accountId   String
+  account     Account @relation(fields: [accountId], references: [id])
+
+  createdAt         DateTime            @default(now())
+  updatedAt         DateTime?           @updatedAt
+  transactions      Transactions[]
+  CreditCardInvoice CreditCardInvoice[]
+}
+
+model CreditCardInvoice {
+  id          String   @id @default(uuid())
+  month       Int
+  year        Int
+  closingDate DateTime
+  dueDate     DateTime
+  totalAmount Float    @default(0)
+  isPaid      Boolean  @default(false)
+
+  creditCardId String
+  creditCard   CreditCard @relation(fields: [creditCardId], references: [id])
+
+  transactions Transactions[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Account {
+  id      String      @id @default(uuid())
+  name    String      @unique
+  type    AccountType
+  balance Float       @default(0)
+
+  transactions Transactions[]
+  creditCards  CreditCard[]
+
+  @@map("accounts")
+}
+
+enum AccountType {
+  CASH
+  BANK_ACCOUNT
+  IFOOD_ACCOUNT
+  INVESTMENT_BOX
+  EMERGENCY_RESERVE
+  CREDIT_CARD
+}
+
+model Category {
+  id           String         @id @default(uuid())
+  name         String         @unique
+  description  String?
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime?      @updatedAt
+  transactions Transactions[]
+}
+
+enum RoleType {
+  ADMIN
+  MEMBER
+  BILLING
+}
+
+model Role {
+  id    String   @id @default(uuid())
+  name  RoleType
+  users User[]
+}
+
+enum TokenType {
+  PASSWORD_RECOVER
+}
+
+model Token {
+  id        String    @id @default(uuid())
+  type      TokenType
+  token     String    @unique
+  createdAt DateTime  @default(now()) @map("created_at")
+  expiresAt DateTime  @default(now())
+
+  user   User   @relation(fields: [userId], references: [id])
+  userId String @map("user_id")
+
+  @@map("tokens")
+}
+
+model Invitation {
+  id         String    @id @default(uuid())
+  email      String    @unique
+  role       RoleType  @default(MEMBER)
+  token      String    @unique
+  expiresAt  DateTime  @map("expires_at")
+  acceptedAt DateTime? @map("accepted_at")
+  usedAt     DateTime? @map("used_at")
+}
