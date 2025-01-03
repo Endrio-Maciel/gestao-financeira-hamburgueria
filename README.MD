@@ -1,7 +1,12 @@
 # Sistema de Gestão Financeira para Hamburgueria
 
 ## Descrição
-Este é um sistema backend desenvolvido para gerenciar as finanças de uma hamburgueria. Ele inclui funcionalidades como o controle de transações, categorias, contas bancárias e cartões de crédito. O objetivo é auxiliar na organização financeira do negócio, permitindo previsões e análises de fluxo de caixa.
+Este projeto é uma API desenvolvida para ajudar na gestão financeira de uma hamburgueria. A API permite o gerenciamento de transações financeiras, categorias de gastos, contas bancárias, cartões de crédito e faturas. Também oferece funcionalidades de autenticação e recuperação de senhas, além de fornecer um painel de controle financeiro através de uma documentação interativa.
+
+A API foi construída com Fastify e usa JWT para autenticação, Swagger para documentação, Zod para validação de tipos e Casl para permissões dos Membros, billings e Admins.
+
+## Link da API
+Acesse a documentação da API ao vivo aqui. (https://gestao-financeira-hamburgueria.onrender.com/docs#/)
 
 ## Funcionalidades
 - **Gerenciamento de Usuários e Permissões**:
@@ -26,57 +31,28 @@ Este é um sistema backend desenvolvido para gerenciar as finanças de uma hambu
 - **Banco de Dados:** PostgreSQL
 - **Contêiner:** Docker
 
-## Como Executar o Projeto
-1. **Clone o Repositório:**
-   ```bash
-   git clone https://github.com/Endrio-Maciel/gestao-financeira-hamburgueria.git
-   cd gestao-financeira-hamburgueria
-   ```
+## Testando a API
+Acesse a documentação da API através de https://gestao-financeira-hamburgueria.onrender.com/docs#. Realize o login utilizando as credenciais de um usuário criado no seed.
 
-2. **Configure as Variáveis de Ambiente:**
-   Crie um arquivo `.env` baseado no `.env.example` e preencha com suas configurações:
-   ```
-   DATABASE_URL=postgresql://usuario:senha@localhost:5432/nome_do_banco
-   JWT_SECRET=sua_chave_secreta
-   ```
+- Admin: admin@example.com / senha: admin123
+- Membro: member@example.com / senha: member123
+- Billing: billing@example.com / senha: billing123
 
-3. **Suba o Ambiente com Docker:**
-   ```bash
-   docker-compose up -d
-   ```
+O login retornará um token JWT. Esse token deve ser utilizado nas requisições subsequentes para acessar recursos protegidos.
+Endpoints Principais.
 
-4. **Instale as Dependências:**
-   ```bash
-   npm install
-   ```
+-  POST /auth/login: Realiza login e gera um token JWT.
+-  GET /transactions: Lista todas as transações.
+-  POST /transactions: Cria uma nova transação.
+-  GET /categories: Lista todas as categorias.
+-  POST /categories: Cria uma nova categoria.
 
-5. **Execute as Migrações do Banco de Dados:**
-   ```bash
-   npx prisma migrate dev
-   ```
 
-6. **Popule o Banco de Dados (Seed):**
-   ```bash
-   npm run seed
-   ```
 
-7. **Inicie o Servidor:**
-   ```bash
-   npm run dev
-   ```
 
-8. **Acesse o Sistema:**
-   O servidor estará disponível em `http://localhost:3000`.
 
-## Endpoints Disponíveis
-A documentação completa dos endpoints está disponível via Swagger em `http://localhost:3000/docs` (se configurado).
 
-## Melhorias Futuras
-- Implementar testes unitários e de integração.
-- Deploy automatizado em plataformas como Render ou Railway.
-- Integração com serviços externos para processamento de pagamentos.
 
-## Contribuições
-Contribuições são bem-vindas! Sinta-se à vontade para abrir issues ou enviar pull requests.
+
 
 
