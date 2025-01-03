@@ -29,7 +29,6 @@ import { deleteAccount } from "./routes/bank_account/delete-account";
 import { getAllAccount } from "./routes/bank_account/get-all-accounts";
 import { createBankAccount } from "./routes/bank_account/create-bank-account";
 import { createAccount } from "./routes/auth/create-account";
-import { prisma } from "../lib/prisma";
 
 export const app = fastify().withTypeProvider<ZodTypeProvider>()
 
@@ -98,9 +97,10 @@ app.register(deleteAccount)
 app.register(getAllAccount)
 
 
+
 app.listen({
  port: env.PORT,
 }).then(()=>{
- console.log('Server running')
+ console.log(`Server running on port ${env.PORT}`)
 })
 
