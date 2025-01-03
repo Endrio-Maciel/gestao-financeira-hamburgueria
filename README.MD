@@ -29,8 +29,8 @@ Este é um sistema backend desenvolvido para gerenciar as finanças de uma hambu
 ## Como Executar o Projeto
 1. **Clone o Repositório:**
    ```bash
-   git clone https://github.com/seu-usuario/nome-do-repositorio.git
-   cd nome-do-repositorio
+   git clone https://github.com/Endrio-Maciel/gestao-financeira-hamburgueria.git
+   cd gestao-financeira-hamburgueria
    ```
 
 2. **Configure as Variáveis de Ambiente:**
@@ -71,14 +71,6 @@ Este é um sistema backend desenvolvido para gerenciar as finanças de uma hambu
 ## Endpoints Disponíveis
 A documentação completa dos endpoints está disponível via Swagger em `http://localhost:3000/docs` (se configurado).
 
-## Estrutura do Projeto
-- `src/`
-  - `controllers/`: Controladores das requisições.
-  - `services/`: Lógica de negócios.
-  - `repositories/`: Acesso ao banco de dados.
-  - `middlewares/`: Middleware para autenticação e validação.
-  - `routes/`: Definição das rotas da aplicação.
-
 ## Melhorias Futuras
 - Implementar testes unitários e de integração.
 - Deploy automatizado em plataformas como Render ou Railway.
@@ -87,6 +79,4 @@ A documentação completa dos endpoints está disponível via Swagger em `http:/
 ## Contribuições
 Contribuições são bem-vindas! Sinta-se à vontade para abrir issues ou enviar pull requests.
 
-## Licença
-Este projeto está sob a licença MIT. Consulte o arquivo `LICENSE` para mais detalhes.
 
