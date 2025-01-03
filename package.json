@@ -4,8 +4,8 @@
   "main": "src/server.ts",
   "scripts": {
     "dev": "tsx watch src/http/server.ts",
-    "start": "tsc",
-    "build": "node build/server.js",
+    "start": "node build/server.js",
+    "build": "tsc",
     "migrate": "prisma migrate deploy",
     "seed": "npx prisma db seed",
     "postdeploy": "npm run migrate && npm run seed"
