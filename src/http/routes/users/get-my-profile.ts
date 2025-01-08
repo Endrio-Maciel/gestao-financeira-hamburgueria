@@ -14,7 +14,7 @@ export async function getProfile(app: FastifyInstance) {
     response: {
       200: z.object({
        user: z.object({
-        id: z.string().uuid(),
+        id: z.string(),
         name: z.string().nullable(),
         email: z.string().email(),
        })
