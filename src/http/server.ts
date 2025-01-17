@@ -35,7 +35,24 @@ export const app = fastify().withTypeProvider<ZodTypeProvider>()
 app.setSerializerCompiler(serializerCompiler)
 app.setValidatorCompiler(validatorCompiler)
 
-app.register(fastifyCors)
+app.register(fastifyCors, {
+  // origin: (origin, cb) => {
+  //   const allowedOrigins = [
+  //     'http://localhost:3000', 
+  //     'http://localhost:3333/docs#/', 
+  //   ]
+
+  //   if (!origin || allowedOrigins.includes(origin)) {
+  //     cb(null, true);
+  //   } else {
+  //     cb(new Error('Not allowed by CORS'), false);
+  //   }
+  // },
+  origin: '*',
+  methods: ['GET', 'POST', 'PUT', 'DELETE'], 
+  credentials: true, 
+});
+
 
 app.setErrorHandler(errorHandler)
 

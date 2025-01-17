@@ -14,7 +14,7 @@ export async function updatedCategory(app: FastifyInstance) {
       summary: 'Update a category',
       security: [{ bearerAuth: [] }],
       params: z.object({
-        id: z.string().uuid(),
+        id: z.string(),
       }),
       body: z.object({
         name: z.string().optional(),

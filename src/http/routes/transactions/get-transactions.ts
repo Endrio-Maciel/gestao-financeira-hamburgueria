@@ -16,8 +16,8 @@ export async function getAllTransactions(app: FastifyInstance) {
        type: z.enum(["INCOME", "EXPENSE"]).optional(),
         title: z.string().optional(),
         categoryId: z.string().uuid().optional(),
-        page: z.preprocess((val) => Number(val), z.number().default(1)),
-        perPage: z.preprocess((val) => Number(val), z.number().default(10)),
+        page: z.preprocess((val)=> (typeof val === 'string' ? parseInt(val, 10) : val), z.number().default(1)),
+        perPage: z.preprocess((val)=> (typeof val === 'string' ? parseInt(val, 10) : val), z.number().default(1)),
       }),
       response: {
        200: z.object({
@@ -32,7 +32,12 @@ export async function getAllTransactions(app: FastifyInstance) {
           paymentDate: z.string().nullable(),
           createdAt: z.string(),
           updatedAt: z.string(),
-          categoryId: z.string().nullable(),
+          category: z.object({
+            id: z.string(),
+            name: z.string(),
+            description: z.string().nullable()
+          })
+          .nullable()
          })
         ),
         total: z.number(), 
@@ -85,6 +90,7 @@ export async function getAllTransactions(app: FastifyInstance) {
    paymentDate: transaction.paymentDate?.toISOString() ?? null,
    createdAt: transaction.createdAt.toISOString(),
    updatedAt: transaction.updatedAt.toISOString(),
+   accountId: transaction.accountId,
    category: transaction.category ? {
     id: transaction.category.id,
     name: transaction.category.name,

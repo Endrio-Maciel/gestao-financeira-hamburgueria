@@ -15,13 +15,13 @@ export async function createBankAccount(app: FastifyInstance) {
     security: [{ bearerAuth: []}],
     body: z.object({
      name: z.string(),
-     type: z.enum(['CASH', 'BANK_ACCOUNT','IFOOD_ACCOUNT','INVESTMENT_BOX','EMERGENCY_RESERVE','CREDIT_CARD']),
-     balance: z.number().optional(),
+     balance: z.number().optional().default(0),
     }),
     response: {
      201: z.object({
         id: z.string(),
         name: z.string(),
+        balance: z.number().default(0),
         type: z.enum(['CASH', 'BANK_ACCOUNT','IFOOD_ACCOUNT','INVESTMENT_BOX','EMERGENCY_RESERVE','CREDIT_CARD']),
      })
    },
@@ -37,9 +37,9 @@ export async function createBankAccount(app: FastifyInstance) {
    throw new UnauthorizedError('You do not have permission to create a account')
   }
 
-  const {name, type, balance} = request.body;
+  const {name, balance} = request.body;
 
-  const existingAccount = await prisma.category.findUnique({
+  const existingAccount = await prisma.account.findUnique({
     where: { name }
   })
 
@@ -50,7 +50,7 @@ export async function createBankAccount(app: FastifyInstance) {
   const account = await prisma.account.create({
     data: {
      name,
-     type,
+     type: 'BANK_ACCOUNT',
      balance
     }
   })

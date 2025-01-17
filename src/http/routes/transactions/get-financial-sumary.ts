@@ -22,46 +22,31 @@ export async function getFinancialSummary(app: FastifyInstance) {
 
    const currentDate = new Date()
 
-   const [totalIncome, totalExpense] = await prisma.$transaction([
-     prisma.transactions.aggregate({
-      _sum: { amount: true },
-      where: {
-       type: 'INCOME',
-       paymentDate: { lte: currentDate },
-      },
-     }),
+   const accountsAggregate = await prisma.account.aggregate({
+    _sum: { balance: true },
+  });
+  const currentBalance = accountsAggregate._sum.balance ?? 0;
 
-     prisma.transactions.aggregate({
-      _sum: { amount: true },
-      where: {
-        type: "EXPENSE",
-        paymentDate: { lte: currentDate },
-      },
-     }),
-   ])
-
-   const currentBalance = 
-     (totalIncome._sum.amount ?? 0) - (totalExpense._sum.amount ?? 0)
-  
-   const futureExpensesAggregate = await prisma.transactions.aggregate({
+  const futureExpensesAggregate = await prisma.transactions.aggregate({
     _sum: { amount: true },
     where: {
-     type: 'EXPENSE',
-     dueDate: { gt: currentDate },
+      type: 'EXPENSE',
+      dueDate: { gt: currentDate },
+      paymentDate: null,
     },
-   })
+  });
+  const futureExpenses = futureExpensesAggregate._sum.amount ?? 0;
 
-   const futureExpenses = futureExpensesAggregate._sum.amount ?? 0
-
-   const futureIncomeAggregate = await prisma.transactions.aggregate({
+  const futureIncomeAggregate = await prisma.transactions.aggregate({
     _sum: { amount: true },
-    where: { 
-     type: 'INCOME',
-     dueDate: { gt:currentDate }
+    where: {
+      type: 'INCOME',
+      dueDate: { gt: currentDate },
+      paymentDate: null,
     },
-   })
+  });
+  const futureIncomes = futureIncomeAggregate._sum.amount ?? 0;
 
-   const futureIncomes = futureIncomeAggregate._sum.amount ?? 0
 
    return reply.status(200).send({
     currentBalance,

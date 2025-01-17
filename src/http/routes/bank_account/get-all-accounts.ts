@@ -7,7 +7,9 @@ import { getUserPermissions } from "../../../utils/get-user-permissions";
 import { UnauthorizedError } from "../_errors/unauthorized-error";
 
 export async function getAllAccount(app: FastifyInstance) {
-  app.withTypeProvider<ZodTypeProvider>().register(auth).get('/accounts', {
+  app.withTypeProvider<ZodTypeProvider>()
+  .register(auth)
+  .get('/accounts', {
     schema: {
       tags: ['bank_account'],
       summary: 'Get list of accounts',
@@ -16,23 +18,15 @@ export async function getAllAccount(app: FastifyInstance) {
         name: z.string().optional(),
       }),
       response: {
-        200: z.object({
-          accounts: z.array(
-            z.object({
-              name: z.string(),
-              id: z.string(),
-              type: z.enum([
-                'CASH', 'BANK_ACCOUNT', 'IFOOD_ACCOUNT', 'INVESTMENT_BOX', 
-                'EMERGENCY_RESERVE', 'CREDIT_CARD'
-              ]),
-              balance: z.number(),
-            })
-          ),
-          total: z.number(),
-        }),
+        200: z.array(
+          z.object({
+            id: z.string(),
+            name: z.string(),
+            balance: z.number(),
+          }),)
+        },
       },
-    },
-  }, async (request, reply) => {
+   }, async (request, reply) => {
     const userId = await request.getCurrentUserId();
     const role = await request.getUserRole(userId);
 
@@ -50,20 +44,16 @@ export async function getAllAccount(app: FastifyInstance) {
       filter.name = { contains: name, mode: "insensitive" };
     }
 
-    const [accounts, total] = await prisma.$transaction([
-      prisma.account.findMany({
-        where: filter,
-        orderBy: { name: "desc" },
-        include: { _count: true },
-      }),
-      prisma.account.count({
-        where: filter,
-      }),
-    ]);
+    const accounts = await prisma.account.findMany({
+      where: filter,
+      orderBy: { name: 'desc'},
+      select: {
+        id: true,
+        name: true,
+        balance: true,
+      }
+    })
 
-    return reply.send({
-      accounts,
-      total,
-    });
+    return reply.send( accounts );
   });
 }

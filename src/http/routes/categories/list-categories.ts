@@ -7,7 +7,9 @@ import { getUserPermissions } from "../../../utils/get-user-permissions";
 import { UnauthorizedError } from "../_errors/unauthorized-error";
 
 export async function listCategories(app: FastifyInstance) {
- app.withTypeProvider<ZodTypeProvider>().register(auth).get('/categories', {
+ app.withTypeProvider<ZodTypeProvider>()
+ .register(auth)
+ .get('/categories', {
    schema: {
     tags: ['categories'],
     summary: 'List all categories',
@@ -17,9 +19,6 @@ export async function listCategories(app: FastifyInstance) {
       z.object({
         id: z.string(),
         name: z.string(),
-        description: z.string().nullable(),
-        createdAt: z.coerce.string(),
-        updatedAt: z.coerce.string().nullable(),
      }) 
      )
    },
@@ -31,20 +30,20 @@ export async function listCategories(app: FastifyInstance) {
   
   const { cannot } = getUserPermissions(userId, role.name)
 
-  if(cannot('get', 'transactions')){
+  if(cannot('get', 'categories')){
    throw new UnauthorizedError('You do not have permission to view categories')
   }
 
+  console.log('Rota /categories chamada');
+
   const categories = await prisma.category.findMany({
     orderBy: { name: 'asc' },
+    select: {
+      id: true,
+      name: true
+    }
   })
 
-  const formattedCategories = categories.map(category => ({
-   ...category,
-   createdAt: category.createdAt.toISOString(), 
-   updatedAt: category.updatedAt ? category.updatedAt.toISOString() : null, 
- }));
-
-  return reply.status(200).send(formattedCategories)
+  return reply.status(200).send(categories)
  })
 }

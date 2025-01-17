@@ -14,10 +14,10 @@ export async function deleteTransaction(app: FastifyInstance) {
       summary: 'delete a transaction',
       security: [{ bearerAuth: [] }],
       params: z.object({
-        id: z.string().uuid(),
+        id: z.string(),
       }),
       response: {
-        200: z.null()
+        204: z.null()
       },
     },
   }, async (request, reply) => {
@@ -31,17 +31,24 @@ export async function deleteTransaction(app: FastifyInstance) {
     throw new UnauthorizedError('You do not have permission to modify this transaction.')
    }
 
+   try {
     const { id } = request.params;
 
     const existingTransaction = await prisma.transactions.findUnique({ where: { id }})
     if(!existingTransaction) {
+      console.error(`Transação com ID ${id} dnão encontrada`)
       throw new BadRequestError('Transaction not found.')
     }
 
     await prisma.transactions.delete({
      where: { id }
     })
+    console.log(`Transação com ID ${id} deletada com sucesso`)
 
-    return reply.status(200).send()
+    return reply.status(204).send()
+   } catch (error) {
+      console.error("Erro ao deletar a transação:", error);
+      throw new Error("Erro interno ao deletar a transação.");
+   }
   })
 }

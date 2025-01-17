@@ -14,7 +14,7 @@ export async function changeTransaction(app: FastifyInstance) {
       summary: 'Change a transaction',
       security: [{ bearerAuth: [] }],
       params: z.object({
-        id: z.string().uuid(),
+        id: z.string(),
       }),
       body: z.object({
         type: z.enum(["INCOME", "EXPENSE"]).optional(),
@@ -53,6 +53,8 @@ export async function changeTransaction(app: FastifyInstance) {
 
     const { id } = request.params;
     const { type, title, description, amount, dueDate, paymentDate, categoryId } = request.body;
+    // const { paymentDate = new Date(request.body.paymentDate)
+
 
     const existingTransaction = await prisma.transactions.findUnique({ where: { id }})
     if(!existingTransaction) {
@@ -64,10 +66,24 @@ export async function changeTransaction(app: FastifyInstance) {
     if (title) updateData.title = title;
     if (description !== undefined) updateData.description = description;
     if (amount !== undefined) updateData.amount = amount;
-    if (dueDate) updateData.dueDate = new Date(dueDate);
+    if (dueDate) {
+      const validDueDate = new Date(dueDate)
+      if(!isNaN(validDueDate.getTime())) {
+        updateData.dueDate = validDueDate
+      } else {
+        throw new BadRequestError('Data de vencimento inválida')  
+      }
+    }
+
     if (paymentDate) {
-      updateData.paymentDate = new Date(paymentDate);
-      updateData.isFinalized = true; 
+      const validPaymentDate = new Date(paymentDate)
+      if(!isNaN(validPaymentDate.getTime())) {
+        updateData.paymentDate = validPaymentDate
+        updateData.isFinalized = true
+      } else {
+       updateData.paymentDate !== null ? updateData.isFinalized = true : updateData.isFinalized = false
+        // throw new BadRequestError('Data de pagamento inválida')  
+      }
     }
     if(categoryId) {
       updateData.categoyId = categoryId

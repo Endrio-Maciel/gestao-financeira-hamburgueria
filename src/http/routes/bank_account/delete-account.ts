@@ -32,7 +32,7 @@ export async function deleteAccount(app: FastifyInstance) {
 
     const { id } = request.params;
 
-    const accountExisting = await prisma.account.findMany({
+    const accountExisting = await prisma.account.findUnique({
      where: { id }
     })
     
@@ -40,10 +40,14 @@ export async function deleteAccount(app: FastifyInstance) {
       throw new BadRequestError()
     }
 
+    await prisma.creditCard.deleteMany({
+      where: {accountId: id}
+    })
+
     await prisma.account.delete({
      where: {id}
     })
     
-    return reply.send()
+    return reply.status(204).send()
   });
 }
