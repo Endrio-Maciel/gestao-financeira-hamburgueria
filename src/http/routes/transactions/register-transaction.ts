@@ -5,6 +5,7 @@ import { prisma } from "../../../lib/prisma";
 import { auth } from "../../middlewares/auth";
 import { getUserPermissions } from "../../../utils/get-user-permissions";
 import { UnauthorizedError } from "../_errors/unauthorized-error";
+import { BadRequestError } from "../_errors/bad-request-error";
 
 export async function registerTransaction(app: FastifyInstance) {
   app.withTypeProvider<ZodTypeProvider>()
@@ -62,16 +63,14 @@ export async function registerTransaction(app: FastifyInstance) {
         });
 
         if (!account) {
-          console.error("Conta não encontrada.");
-          return reply.status(400).send({ message: "Conta não encontrada" });
+          throw new BadRequestError("Conta não encontrada" )
         }
 
         const isFinalized = !!paymentDate;
         const updatedBalance = type === 'INCOME' ? account.balance + amount : account.balance - amount;
 
         if (updatedBalance < 0) {
-          console.error("Saldo insuficiente.");
-          return reply.status(400).send({ message: "Saldo insuficiente" });
+          throw new BadRequestError("Conta não encontrada")
         }
 
         await prisma.account.update({
@@ -112,8 +111,7 @@ export async function registerTransaction(app: FastifyInstance) {
           creditCardId: transaction.creditCard?.id || null,
         });
       } catch (err) {
-        console.error("Erro inesperado:", err);
-        reply.status(500).send({ message: 'Erro interno ao processar a transação.' });
+        throw new BadRequestError('Erro interno ao processar a transação.')
       }
-    });
+    })
 }

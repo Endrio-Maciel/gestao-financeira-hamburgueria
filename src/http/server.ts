@@ -36,19 +36,18 @@ app.setSerializerCompiler(serializerCompiler)
 app.setValidatorCompiler(validatorCompiler)
 
 app.register(fastifyCors, {
-  // origin: (origin, cb) => {
-  //   const allowedOrigins = [
-  //     'http://localhost:3000', 
-  //     'http://localhost:3333/docs#/', 
-  //   ]
+  origin: (origin, cb) => {
+    const allowedOrigins = [
+      'http://localhost:3000', 
+      'https://vercel.com/endrio-maciels-projects/front-end-hamburgueria-p5jz/98cpQDkrEpUoSaz5M5hQJRzv9JEw', 
+    ];
 
-  //   if (!origin || allowedOrigins.includes(origin)) {
-  //     cb(null, true);
-  //   } else {
-  //     cb(new Error('Not allowed by CORS'), false);
-  //   }
-  // },
-  origin: '*',
+    if (!origin || allowedOrigins.includes(origin)) {
+      cb(null, true);
+    } else {
+      cb(new Error('Origin not allowed'), false); 
+    }
+  },
   methods: ['GET', 'POST', 'PUT', 'DELETE'], 
   credentials: true, 
 });
