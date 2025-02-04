@@ -4,7 +4,7 @@
   "main": "src/server.ts",
   "scripts": {
     "dev": "tsx watch src/http/server.ts",
-    "start": "node build/http/server.js",
+    "start": "npm run migrate && node build/http/server.js",
     "build": "tsc",
     "migrate": "prisma migrate deploy",
     "seed": "npx prisma db seed",
