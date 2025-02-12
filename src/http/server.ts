@@ -29,6 +29,9 @@ import { deleteAccount } from "./routes/bank_account/delete-account";
 import { getAllAccount } from "./routes/bank_account/get-all-accounts";
 import { createBankAccount } from "./routes/bank_account/create-bank-account";
 import { createAccount } from "./routes/auth/create-account";
+import { createInvite } from "./routes/admin/create-invite-to-email";
+import { acceptInvite } from "./routes/admin/accept-invite";
+import { listUsers } from "./routes/admin/list-all-users";
 
 export const app = fastify().withTypeProvider<ZodTypeProvider>()
 
@@ -89,6 +92,10 @@ app.register(requestPasswordRecover)
 app.register(resetPassword)
 
 app.register(getProfile)
+
+app.register(createInvite)
+app.register(acceptInvite)
+app.register(listUsers)
 
 app.register(registerTransaction)
 app.register(changeTransaction)

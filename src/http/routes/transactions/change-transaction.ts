@@ -53,8 +53,6 @@ export async function changeTransaction(app: FastifyInstance) {
 
     const { id } = request.params;
     const { type, title, description, amount, dueDate, paymentDate, categoryId } = request.body;
-    // const { paymentDate = new Date(request.body.paymentDate)
-
 
     const existingTransaction = await prisma.transactions.findUnique({ where: { id }})
     if(!existingTransaction) {
