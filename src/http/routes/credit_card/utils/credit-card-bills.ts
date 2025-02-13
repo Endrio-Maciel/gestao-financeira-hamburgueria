@@ -1,4 +1,4 @@
-import { prisma } from "../../../../lib/prisma";
+import { prisma } from "../../../../lib/client";
 
 export async function closeInvoice(creditCardId: string) {
   const creditCard = await prisma.creditCard.findUnique({

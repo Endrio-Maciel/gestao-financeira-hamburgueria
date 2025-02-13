@@ -2,7 +2,7 @@ import { FastifyInstance } from "fastify";
 import { ZodTypeProvider } from "fastify-type-provider-zod";
 import { z } from 'zod'
 import { randomUUID } from "node:crypto";
-import { prisma } from "../../../lib/prisma";
+import { prisma } from "../../../lib/client";
 import { addHours } from "date-fns";
 
 export async function requestPasswordRecover(app: FastifyInstance) {

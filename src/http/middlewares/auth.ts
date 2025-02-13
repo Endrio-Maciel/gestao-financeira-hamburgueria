@@ -1,7 +1,7 @@
 import { FastifyInstance } from "fastify";
 import fastifyPlugin from "fastify-plugin";
 import { UnauthorizedError } from "../routes/_errors/unauthorized-error";
-import { prisma } from "../../lib/prisma";
+import { prisma } from "../../lib/client";
 import { Role } from "@prisma/client";
 import { BadRequestError } from "../routes/_errors/bad-request-error";
 
